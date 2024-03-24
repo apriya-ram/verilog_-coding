@@ -1,0 +1,80 @@
+module Sequence_Detector_MEALY_Verilog(sequence_in,clock,reset,detector_out
+    );
+input clock;                   // clock signal
+input reset;                   // reset input
+input sequence_in;             // binary input
+output reg detector_out;       // output of the sequence detector
+parameter  idle=4'b0001,         // "Zero" State
+  One=4'b0010,                   // "One" State
+  OneZero=4'b0100,               // "OneZero" State
+  OneZeroOne=4'b1000,           // "OnceZeroOne" State
+  
+reg [3:0] current_state, next_state; // current state and next state
+// sequential memory of the Mealy FSM
+always @(posedge clock or posedge reset)
+begin
+ if(reset==1) 
+  current_state <= idle; // when reset=1, reset the state of the FSM to "idle" State
+else
+ current_state <= next_state;   // otherwise, next state
+end
+always  @(current_state or sequence_in)
+begin
+ case(current_state) 
+ idle:begin
+  if(sequence_in==1)
+    begin
+      detector_out = 1'b0;
+      next_state = One;
+    end
+  else
+    begin
+      detector_out = 1'b0;
+      next_state = idle;
+    end
+ One:begin
+  if(sequence_in==0)
+    begin
+      next_state = OneZero;
+      detector_out = 1'b0;
+    end
+  else 
+    begin
+      next_state = One;
+      detector_out = 1'b0;
+    end 
+ end
+ OneZero:begin
+  if(sequence_in==0)
+    begin
+      detector_out = 1'b0;
+      next_state = Zero;
+    end
+  else
+    begin
+      detector_out = 1'b0;
+      next_state = OneZeroOne;
+    end
+ end 
+ OneZeroOne:begin
+  if(sequence_in==0)
+    begin
+      detector_out =1'b0
+      next_state = OneZero;
+    end
+  else
+    begin
+      detector_out = 1'b1;
+      next_state = idle;
+    end
+ end
+ 
+ default:
+   begin
+     next_state = idle;
+     detector_out = 1'b0;
+   end
+ endcase  
+end
+
+endmodule
