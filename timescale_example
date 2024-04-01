@@ -1,0 +1,48 @@
+`timescale 10ns/10ns 
+module tim(); 
+  reg i; 
+  initial 
+    begin 
+     i=0; 
+     #7.7212; 
+     i=1; 
+     $display("STATEMENT 1 :: time is ",$stime); 
+     #7.123; 
+     $finish; 
+  end 
+endmodule 
+
+module try; 
+time delay_time = 7.721; 
+initial begin 
+
+$display("STATEMENT 2 :: delay for %0t",delay_time ); 
+end 
+endmodule
+[3/22 9:55 AM] Priya Ananthakrishnan
+timescale 10ns/1ns 
+module tim(); 
+reg i; 
+initial 
+begin 
+
+i=0; 
+
+#7.7212; 
+
+i=1; 
+
+$display("STATEMENT 1 :: time is ",$stime); 
+
+#7.123; 
+
+$finish; 
+end 
+endmodule 
+module try; 
+time delay_time = 7.721; 
+initial begin 
+
+$display("STATEMENT 2 :: delay for %0t",delay_time ); 
+end 
+endmodule
